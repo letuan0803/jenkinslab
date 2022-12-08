@@ -1,0 +1,26 @@
+- name: Install Docker and Docker Compose
+  hosts: server
+  become: yes
+  tasks:
+    - name: Update
+      apt:
+        update_cache: yes
+
+    - name: Install Docker
+      apt:
+        name:
+          - docker
+          - docker-compose
+        state: present
+    - name: Login DockerHub
+      shell: docker login -u "{{DOCKER_USERNAME}}" -p "{{DOCKER_PASSWORD}}"
+    - name: Copy file
+      copy:
+        src: docker-compose.yaml
+        dest: /home/ubuntu/
+    - name: Restart docker-compose
+      shell: |
+        docker-compose stop
+        docker-compose rm -f
+        docker-compose pull
+        docker-compose up -d
