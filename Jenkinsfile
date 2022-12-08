@@ -30,6 +30,8 @@ pipeline {
         }
         stage("Deploy"){
             steps{
+                sh "chmod 400 tuanlt13.pem"
+                
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable:'DOCKER_PASSWORD')]) {
                     ansiblePlaybook(
                         credentialsId: 'private_key',
